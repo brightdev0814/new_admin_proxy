@@ -37,7 +37,9 @@ const isAccessable = async (uid, site) => {
 
 const getMembership = async (uid, lid, siteUrl) => {
   try {
-    let site = await Site.findOne({ url: siteUrl });
+    const url = new URL(siteUrl);
+    const hostname = url.hostname;
+    let site = await Site.findOne({ url: site });
     serverLog.error(`Missing config for ${siteUrl}`);
     let { data } = await axios.get(
       `${siteUrl}/wp-content/plugins/indeed-membership-pro/apigate.php?ihch=${site.membershipApiKey}&action=verify_user_level&uid=${uid}&lid=${lid}`
